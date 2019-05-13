@@ -10,4 +10,5 @@
 
 <style lang="sass">
   @import 'src/styles/base';
+  @import '~font-awesome/scss/font-awesome';
 </style>

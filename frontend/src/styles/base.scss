@@ -6,39 +6,3 @@ body {
   background: $background;
   font-family: 'Playfair Display', serif;
 }
-
-.box {
-  text-align: center;
-  width: 500px;
-  padding: 15px 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  box-shadow: 0 0 2.2em rgba(0, 0, 0, .25);
-  border: 3px solid $base;
-}
-
-.box .title {
-  color: $base;
-}
-
-.box .title.has-comment {
-  border-bottom: 1px solid $base;
-  padding-bottom: 10px;
-}
-
-.box img {
-  max-width: 100%;
-}
-
-@media only screen and ( max-width: 600px ) {
-  .box {
-    border: none;
-    position: static;
-    transform: none;
-    width: auto;
-    box-shadow: 0 0 2.2em rgba(0, 0, 0, .15);
-  }
-}
