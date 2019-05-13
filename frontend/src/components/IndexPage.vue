@@ -3,19 +3,20 @@
     div(v-if='!mutating')
       message(v-if='message && !errored', :message='message', :hasComment='hasComment')
       message(
-        v-else=true,
+        v-else,
         :message='fetchError',
         :hasComment='true',
         :error='true'
       )
-      .more-link
-        a(
-          href='javascript:;'
-          @click='fetchMessage'
-        )
-          i.fa.fa-refresh
-          span Kérek még!
-    loading(v-else=true)
+    loading(v-else)
+    .more-link
+      a(
+        href='javascript:;'
+        @click='fetchMessage',
+        :class='{ disabled: moreButton.disabled }'
+      )
+        i.fa.fa-refresh
+        span Kérek még!
 </template>
 
 <script>
@@ -33,11 +34,16 @@ export default {
       message: null,
       hasComment: false,
       mutating: true,
-      errored: false
+      errored: false,
+      moreButton: {
+        loaded: false,
+        disabled: false
+      }
     }
   },
   mounted: function () {
-    return this.fetchMessage();
+    this.fetchMessage();
+    this.moreButton.loaded = true;
   },
   computed: {
     fetchError: function () {
@@ -49,8 +55,13 @@ export default {
   },
   methods: {
     fetchMessage() {
+      if (this.moreButton.disabled) {
+        return;
+      }
+
       this.mutating = true;
       this.errored = false;
+      this.moreButton.disabled = true;
 
       return axios.get('https://sallai.me/api/bolyaiwtf', {
         headers: {
@@ -67,11 +78,13 @@ export default {
           }
 
           this.mutating = false;
+          this.moreButton.disabled = false;
         })
         .catch(err => {
           console.error(err);
           this.errored = true;
           this.mutating = false;
+          this.moreButton.disabled = false;
         });
     }
   }
@@ -105,6 +118,10 @@ export default {
 
       &:hover {
         background: darken($base, 10%);
+      }
+
+      &.disabled {
+        background: lighten($base, 15%);
       }
     }
   }
