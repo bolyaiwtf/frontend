@@ -43,7 +43,7 @@ export default {
     }
   },
   mounted: function () {
-    this.fetchMessage();
+    this.fetchMessages();
     this.moreButton.loaded = true;
   },
   computed: {
