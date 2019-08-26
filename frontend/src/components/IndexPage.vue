@@ -60,11 +60,10 @@ export default {
       this.hasComment = false;
       this.mutating = true;
       this.errored = false;
-      this.moreButton.disabled = true;
     },
 
     getRandomMessage() {
-      if (!this.messages.length || this.moreButton.disabled) {
+      if (!this.messages.length) {
         return;
       }
 
