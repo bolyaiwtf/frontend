@@ -12,7 +12,7 @@
     .more-link
       a(
         href='javascript:;'
-        @click='fetchMessage',
+        @click='getRandomMessage',
         :class='{ disabled: moreButton.disabled }'
       )
         i.fa.fa-refresh
@@ -31,13 +31,14 @@ export default {
   },
   data: function () {
     return {
+      messages: [],
       message: null,
       hasComment: false,
       mutating: true,
       errored: false,
       moreButton: {
         loaded: false,
-        disabled: false
+        disabled: true
       }
     }
   },
@@ -54,37 +55,43 @@ export default {
     }
   },
   methods: {
-    fetchMessage() {
-      if (this.moreButton.disabled) {
-        return;
-      }
-
+    reset() {
+      this.message = null;
+      this.hasComment = false;
       this.mutating = true;
       this.errored = false;
       this.moreButton.disabled = true;
+    },
 
-      return axios.get('https://sallai.me/api/bolyaiwtf', {
+    getRandomMessage() {
+      if (!this.messages.length || this.moreButton.disabled) {
+        return;
+      }
+
+      this.reset();
+
+      const message = this.messages[Math.floor(Math.random() * this.messages.length)];
+      this.message = message;
+      this.hasComment = message.comment && !!message.comment.length;
+      this.mutating = false;
+      this.moreButton.disabled = false;
+    },
+
+    fetchMessages() {
+      return axios.get('https://api.bolyai.wtf/wtf.json', {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
         .then(({ data }) => {
-          if (data.ok) {
-            this.message = data.wtf;
-            this.hasComment = data.wtf.comment && !!data.wtf.comment.length
-          } else {
-            this.errored = true;
-          }
-
-          this.mutating = false;
-          this.moreButton.disabled = false;
+          this.messages = data;
+          return this.getRandomMessage();
         })
         .catch(err => {
           console.error(err);
           this.errored = true;
           this.mutating = false;
-          this.moreButton.disabled = false;
         });
     }
   }
