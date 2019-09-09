@@ -1,13 +1,13 @@
-# bolyaiwtf frontend
+# bolyai.wtf frontend
 
-This is a Vue application. It uses an API endpoint from sallai.me to fetch the messages.
+This is a Vue application. It uses the [bolyai.wtf API](https://github.com/bolyaiwtf/api).
 
 ## Getting Started
 
 Clone the repo:
 
 ```sh
-git clone git@github.com:jozsefsallai/bolyaiwtf-frontend
+git clone git@github.com:bolyaiwtf/frontend.git bolyaiwtf-frontend
 cd bolyaiwtf-frontend
 ```
 
@@ -32,6 +32,10 @@ Deployment is done on Netlify. Use this command to build for production:
 ```sh
 NODE_ENV=production yarn build
 ```
+
+## What?
+
+bolyai.wtf is a JOKE PROJECT. It is a random message generator specifically tied to student life in the Bolyai Farkas High School from Marosvásárhely, Romania. bolyai.wtf is in no way affiliated with the high school.
 
 ## License
 

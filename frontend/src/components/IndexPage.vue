@@ -12,7 +12,7 @@
     .more-link
       a(
         href='javascript:;'
-        @click='getRandomMessage',
+        @click='fetchMessage',
         :class='{ disabled: moreButton.disabled }'
       )
         i.fa.fa-refresh
@@ -31,19 +31,18 @@ export default {
   },
   data: function () {
     return {
-      messages: [],
       message: null,
       hasComment: false,
       mutating: true,
       errored: false,
       moreButton: {
         loaded: false,
-        disabled: true
+        disabled: false
       }
     }
   },
   mounted: function () {
-    this.fetchMessages();
+    this.fetchMessage();
     this.moreButton.loaded = true;
   },
   computed: {
@@ -55,42 +54,37 @@ export default {
     }
   },
   methods: {
-    reset() {
-      this.message = null;
-      this.hasComment = false;
-      this.mutating = true;
-      this.errored = false;
-    },
-
-    getRandomMessage() {
-      if (!this.messages.length) {
+    fetchMessage() {
+      if (this.moreButton.disabled) {
         return;
       }
 
-      this.reset();
+      this.mutating = true;
+      this.errored = false;
+      this.moreButton.disabled = true;
 
-      const message = this.messages[Math.floor(Math.random() * this.messages.length)];
-      this.message = message;
-      this.hasComment = message.comment && !!message.comment.length;
-      this.mutating = false;
-      this.moreButton.disabled = false;
-    },
-
-    fetchMessages() {
-      return axios.get('https://api.bolyai.wtf/wtf.json', {
+      return axios.get('https://api.bolyai.wtf', {
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
       })
         .then(({ data }) => {
-          this.messages = data;
-          return this.getRandomMessage();
+          if (data.ok) {
+            this.message = data.wtf;
+            this.hasComment = data.wtf.comment && !!data.wtf.comment.length
+          } else {
+            this.errored = true;
+          }
+
+          this.mutating = false;
+          this.moreButton.disabled = false;
         })
         .catch(err => {
           console.error(err);
           this.errored = true;
           this.mutating = false;
+          this.moreButton.disabled = false;
         });
     }
   }
